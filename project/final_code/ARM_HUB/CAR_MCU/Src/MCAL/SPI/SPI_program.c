@@ -98,7 +98,10 @@ void MSPI_voidInit( u8 Copy_u8SPINumbers)
 void MSPI_voidSendRecieveSynch(u8 Copy_u8SPINumbers ,u8 Copy_u8DataToTransmit ,u8 *Copy_u8DataToReceive)
 {
 	/*1- Clear for slave select pin*/
-	GPIO_voidSetPinValue(MSPI_SLAVE_PIN, LOW);
+	if(Copy_u8SPINumbers == 0)
+		GPIO_voidSetPinValue(MSPI_SLAVE1_PIN, LOW);
+	else
+		GPIO_voidSetPinValue(MSPI_SLAVE2_PIN, LOW);
 //	STK_voidSetBusyWait(200);
 	/*2- Put data transmit to SPI data register*/
 	SPI_NUM[Copy_u8SPINumbers] -> SPI_DR =Copy_u8DataToTransmit;
@@ -115,14 +118,20 @@ void MSPI_voidSendRecieveSynch(u8 Copy_u8SPINumbers ,u8 Copy_u8DataToTransmit ,u
 	}
 
 	/*5-set for slave select pin*/	
-	GPIO_voidSetPinValue(MSPI_SLAVE_PIN, HIGH);
+	if(Copy_u8SPINumbers == 0)
+		GPIO_voidSetPinValue(MSPI_SLAVE1_PIN, HIGH);
+	else
+		GPIO_voidSetPinValue(MSPI_SLAVE2_PIN, HIGH);
 
 }
 
 void MSPI_voidSendRecieveASynch(u8 Copy_u8SPINumbers , u8 Copy_u8DataToTransmit , void(*Copy_Func)())
 {
 	/*Clear for slave select pin*/
-	GPIO_voidSetPinValue(MSPI_SLAVE_PIN, LOW);
+	if(Copy_u8SPINumbers == 0)
+		GPIO_voidSetPinValue(MSPI_SLAVE1_PIN, LOW);
+	else
+		GPIO_voidSetPinValue(MSPI_SLAVE2_PIN, LOW);
 
 	// Assign call back function
 	CallBack_Func = Copy_Func;
@@ -130,7 +139,10 @@ void MSPI_voidSendRecieveASynch(u8 Copy_u8SPINumbers , u8 Copy_u8DataToTransmit 
 	SPI_NUM[Copy_u8SPINumbers] -> SPI_DR =  Copy_u8DataToTransmit;
 
 	/*set for slave select pin*/
-	GPIO_voidSetPinValue(MSPI_SLAVE_PIN, HIGH);
+	if(Copy_u8SPINumbers == 0)
+			GPIO_voidSetPinValue(MSPI_SLAVE1_PIN, HIGH);
+		else
+			GPIO_voidSetPinValue(MSPI_SLAVE2_PIN, HIGH);
 
 }
 
@@ -139,8 +151,8 @@ void SPI1_IRQHandler(void)
 	CallBack_Func();
 }
 
-u8 MSPI_u8ReadDataISR(){
-	return (SPI_NUM[0] -> SPI_DR);
+u8 MSPI_u8ReadDataISR(u8 Copy_u8SPINumbers){
+	return (SPI_NUM[Copy_u8SPINumbers] -> SPI_DR);
 }
 
 

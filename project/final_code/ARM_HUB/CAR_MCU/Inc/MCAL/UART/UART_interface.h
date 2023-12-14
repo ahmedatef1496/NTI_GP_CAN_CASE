@@ -18,7 +18,7 @@
 typedef enum
 {
 	USART_ONE=0,
-	USART_TwO,
+	USART_TWO,
 	USART_THREE,
 	UART_FOUR,
 	UART_FIVE
@@ -37,6 +37,7 @@ u8 USART_ReceiveNoBlock(UART_Channel UART_Num);
 void USART_RX_InterruptDisable(UART_Channel UART_Num );
 void USART_RX_InterruptEnable(UART_Channel UART_Num );
 
-void USART1_void_SetCallBack();
+void USART1_void_SetCallBack(void(*Ptr)(void));
+void USART2_void_SetCallBack(void(*Ptr)(void));
 
 #endif // UART_INTERFACE_H

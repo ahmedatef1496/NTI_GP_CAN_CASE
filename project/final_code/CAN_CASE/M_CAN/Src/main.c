@@ -11,6 +11,7 @@
 //#include "MCAL/UART/UART_Interface.h"
 #include "HAL/LCD/LCD_Interface.h"
 
+#define UNITY			0
 
 #define TX_LED_CHECK	GPIO_A, PIN2, GPIO_HIGH
 #define RX_LED_CHECK	GPIO_A, PIN1, GPIO_HIGH
@@ -101,9 +102,9 @@ void CAN_RX(void)			// CAN Receive Fun
 	while(CAN_voidRXPending(CAN_RX_FIFO0) == 0);
 
 	CAN_voidGetRxMsg(CAN_RX_FIFO0,&Rx_header,Globaleu8Data);
-//	USART_voidTransmitSynch(USART_ONE, Device_IDs[Globaleu8Data[ID]]);
-//
-//	USART_voidTransmitCharSynch(USART_ONE, ' ');
+	//	USART_voidTransmitSynch(USART_ONE, Device_IDs[Globaleu8Data[ID]]);
+	//
+	//	USART_voidTransmitCharSynch(USART_ONE, ' ');
 	if(Globaleu8Data[ID] < 2){
 		USART_voidTransmitSynch(USART_ONE, Device_Status[Globaleu8Data[STATUS]]);
 	}
@@ -118,7 +119,9 @@ void CAN_RX(void)			// CAN Receive Fun
 		}
 	}
 
-//	USART_voidTransmitCharSynch(USART_ONE, '\n');
+#if UNITY == 0
+	USART_voidTransmitCharSynch(USART_ONE, '\n');
+#endif
 }
 
 u16 Std_id_High(u16 local_u16Std_Id)
@@ -145,39 +148,42 @@ void CAN_FilterConfig(void)
 
 void USART_RXCallback(void)
 {
-	//	static u8 Local_u8counter = 0;
-	//
-	//	Local_u8counter++;
-	//
-	//	if( Local_u8counter == 1)
-	//	{
-	//		// Task ID
-	//		Globaleu8Data[ID] =  ( USART_ReceiveNoBlock(USART_ONE) - '0' );
-	//		GPIO_voidSetPinValue(GPIO_B, PIN0, GPIO_HIGH);
-	//		//		USART_voidTransmitCharSynch(USART_ONE, Globaleu8Data[ID] + '0');
-	//
-	//	}
-	//	else if( Local_u8counter == 2)
-	//	{
-	//		// READ/WRITE  Data
-	//		Globaleu8Data[R_W] = (USART_ReceiveNoBlock(USART_ONE) - '0');
-	//		GPIO_voidSetPinValue(GPIO_B, PIN1, GPIO_HIGH);
-	//		//		USART_voidTransmitCharSynch(USART_ONE, Globaleu8Data[R_W] + '0');
-	//
-	//	}
-	//	else if( Local_u8counter == 3)
-	//	{
-	//		// Data
-	//		Globaleu8Data[2] = (USART_ReceiveNoBlock(USART_ONE) - '0');
-	//		GPIO_voidSetPinValue(GPIO_B, PIN3, GPIO_HIGH);
-	//		//		USART_voidTransmitCharSynch(USART_ONE, Globaleu8Data[2] + '0');
-	//
-	//		Local_u8counter = 0;
-	//		USART_voidTransmitCharSynch(USART_ONE, ' ');
-	//		//		TX_Flag = 1;
-	//		vTaskResume(xTask_1);
-	//	}
+#if UNITY == 0
+	// Without Unity
+	static u8 Local_u8counter = 0;
 
+	Local_u8counter++;
+
+	if( Local_u8counter == 1)
+	{
+		// Task ID
+		Globaleu8Data[ID] =  ( USART_ReceiveNoBlock(USART_ONE) - '0' );
+		GPIO_voidSetPinValue(GPIO_B, PIN0, GPIO_HIGH);
+		//		USART_voidTransmitCharSynch(USART_ONE, Globaleu8Data[ID] + '0');
+
+	}
+	else if( Local_u8counter == 2)
+	{
+		// READ/WRITE  Data
+		Globaleu8Data[R_W] = (USART_ReceiveNoBlock(USART_ONE) - '0');
+		GPIO_voidSetPinValue(GPIO_B, PIN1, GPIO_HIGH);
+		//		USART_voidTransmitCharSynch(USART_ONE, Globaleu8Data[R_W] + '0');
+
+	}
+	else if( Local_u8counter == 3)
+	{
+		// Data
+		Globaleu8Data[2] = (USART_ReceiveNoBlock(USART_ONE) - '0');
+		GPIO_voidSetPinValue(GPIO_B, PIN3, GPIO_HIGH);
+		//		USART_voidTransmitCharSynch(USART_ONE, Globaleu8Data[2] + '0');
+
+		Local_u8counter = 0;
+		USART_voidTransmitCharSynch(USART_ONE, ' ');
+		//		TX_Flag = 1;
+		vTaskResume(xTask_1);
+	}
+#else
+	//With Unity
 	if(ch1 == terminationChar)
 		counter++;
 
@@ -214,6 +220,7 @@ void USART_RXCallback(void)
 			vTaskResume(xTask_1);
 		}
 	}
+#endif
 
 }
 
@@ -242,7 +249,7 @@ void vTask_CAN_TX( void* params )
 
 		//		if(TX_Flag == 1)
 		//		{
-//		USART_RX_InterruptDisable(USART_ONE);
+		//		USART_RX_InterruptDisable(USART_ONE);
 		GPIO_voidSetPinValue(TX_LED_CHECK);
 		CAN_TX();			// Start Transmit
 
@@ -274,7 +281,7 @@ void vTask_CAN_RX( void* params )
 		GPIO_voidSetPinValue(GPIO_B, PIN0, GPIO_LOW);
 		GPIO_voidSetPinValue(GPIO_B, PIN1, GPIO_LOW);
 		GPIO_voidSetPinValue(GPIO_B, PIN3, GPIO_LOW);
-//		USART_RX_InterruptEnable(USART_ONE);
+		//		USART_RX_InterruptEnable(USART_ONE);
 		vTaskSuspend(xTask_2);
 
 		//		}

@@ -38,10 +38,10 @@
 #define  RS   PINB0
 #define  EN   PINA8
 
-#define  D4   PINB15
-#define  D5   PINB14
-#define  D6   PINB13
-#define  D7   PINB12
+#define  D4   PINB8
+#define  D5   PINB9
+#define  D6   PINB10
+#define  D7   PINB11
 
 #define LCD_PORT  GPIOB
 

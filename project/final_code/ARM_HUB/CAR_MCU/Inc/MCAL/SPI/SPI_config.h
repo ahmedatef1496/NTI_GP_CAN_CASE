@@ -14,7 +14,8 @@
 
 
 /*please put in pair */
-#define MSPI_SLAVE_PIN   		PINA0
+#define MSPI_SLAVE1_PIN   		PINA0
+#define MSPI_SLAVE2_PIN   		PINA1
 
 
 /*	options : 1-IDLE_LOW

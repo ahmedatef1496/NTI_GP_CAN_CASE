@@ -117,12 +117,11 @@ void TIMER1_voidSetDutyCycle(u16 duty)
 
 void TIMER1_voidStop()
 {
-	TCNT1 = 0;
-
 	Clear_Bit(TCCR1B,TCCR1B_CS10);
 	Clear_Bit(TCCR1B,TCCR1B_CS11);
 	Clear_Bit(TCCR1B,TCCR1B_CS12);
 
+	TCNT1 = 0;
 }
 
 void TIMER1_ICUsetEdgeDetectionMode(u8 edge)

@@ -78,6 +78,6 @@ void MSPI_voidSendRecieveSynch(u8 Copy_u8SPINumbers ,u8 Copy_u8DataToTransmit ,u
 void MSPI_voidSendRecieveASynch(u8 Copy_u8SPINumbers ,u8 Copy_u8DataToTransmit , void(*Copy_CallBack)() );
 
 
-u8 MSPI_u8ReadDataISR();
+u8 MSPI_u8ReadDataISR(u8 Copy_u8SPINumbers);
 
 #endif //SPI_INIT_H

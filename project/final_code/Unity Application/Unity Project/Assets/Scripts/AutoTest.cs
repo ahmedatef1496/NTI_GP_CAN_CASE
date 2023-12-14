@@ -11,9 +11,12 @@ public class AutoTest : MonoBehaviour
 {
     [SerializeField] TMP_InputField COM_PORT;
     [SerializeField] TMP_InputField BaudRate;
+    [SerializeField] TMP_InputField InterruptDelay;
     [SerializeField] TMP_InputField USART_DataJSON;
     [SerializeField] TMP_InputField USART_ResultsJSON;
     [SerializeField] TMP_Text status;
+    [SerializeField] TMP_Text temp;
+    [SerializeField] TMP_Text light;
     [SerializeField] Image seatBelt;
     [SerializeField] Image LED_Front;
     [SerializeField] Image LED_Back;
@@ -42,6 +45,8 @@ public class AutoTest : MonoBehaviour
         dataDict.Add("LEFT","5");
         dataDict.Add("MOTOR","3");
         dataDict.Add("BELT","2");
+        dataDict.Add("TEMP", "4");
+        dataDict.Add("LIGHT", "5");
         dataDict.Add("WRITE", "0");
         dataDict.Add("READ", "1");
     }
@@ -65,6 +70,7 @@ public class AutoTest : MonoBehaviour
 
     public void StartTests()
     {
+        delayTime = float.Parse(InterruptDelay.text);
         OpenStream();
         if(streamOpen)
             StartCoroutine("StartTestsCoroutine");
@@ -161,6 +167,14 @@ public class AutoTest : MonoBehaviour
                 else if (test.ID == "LEFT")
                 {
                     HandleLEDLeftState(test.actual.ToUpper());
+                }
+                else if (test.ID == "TEMP")
+                {
+                    HandleTemp(test.actual);
+                }
+                else if (test.ID == "LIGHT")
+                {
+                    HandleLight(test.actual);
                 }
                 yield return new WaitForSeconds(float.Parse(test.delay));
             }
@@ -266,6 +280,16 @@ public class AutoTest : MonoBehaviour
         rot.eulerAngles = new Vector3(rot.eulerAngles.x, rot.eulerAngles.y,-int.Parse(speed));
         motorNeedle.transform.rotation = rot;
         motorSpeed.text = speed; 
+    }
+    
+    void HandleTemp(string tempValue)
+    {
+        temp.text = tempValue;
+    }
+    
+    void HandleLight(string lightValue)
+    {
+        light.text = lightValue;
     }
 }
 

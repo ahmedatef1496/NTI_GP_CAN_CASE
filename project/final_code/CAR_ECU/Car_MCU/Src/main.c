@@ -93,9 +93,12 @@ void USART_RXCallback(){
 		if(R_W == 0){
 			Data_Count = 0;
 		}
-		else{
+		else if(Data_Count < 4){
 			USART_RX_Flag = 1;
 			Data_Count++;
+		}
+		else{
+			Data_Count = 0;
 		}
 	}
 }

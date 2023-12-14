@@ -9,7 +9,7 @@
 #include "../../LIB/Bit_Math.h"
 
 #include "../../MCAL/TIMER1/TIMER1_Interface.h"
-
+#include "../../MCAL/DIO/DIO_Interface.h"
 #include "Motor_Interface.h"
 #include "Motor_Config.h"
 
@@ -30,6 +30,7 @@ void Motor_voidSetSpeed(u8 Copy_u8Speed)		// 50 - 50% duty / 100 - 100% duty
 	}
 	else{
 		TIMER1_voidStop();
+		DIO_u8SetPinValue(DIO_u8PORTD, DIO_u8PIN_5, DIO_u8PIN_LOW);
 	}
 
 

@@ -7,6 +7,7 @@
 #define THRESHOLD_VALUE  9000000UL
 
 void (*USART1_RXCallBack)(void);
+void (*USART2_RXCallBack)(void);
 
 void USART_voidInit(UART_Channel UART_Num )
 {
@@ -131,9 +132,23 @@ void USART1_IRQHandler(void)
 
 
 }
+void USART2_void_SetCallBack(void(*Ptr)(void))
+{
+	USART2_RXCallBack = Ptr;
+}
+
+/*Interrupt Service Routines*/
+void USART2_IRQHandler(void)
+{
+
+	if(GET_BIT(USARTNumbers[USART_TWO]->USART_SR,RXNE))
+	{
+		USART2_RXCallBack();
+	}
 
 
 
+}
 
 
 /********************************************************/
