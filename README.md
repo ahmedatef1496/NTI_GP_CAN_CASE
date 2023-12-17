@@ -15,9 +15,12 @@
 - Ahmed Atef - [![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=flat&logo=github&logoColor=white)]() [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=flat&logo=linkedin&logoColor=white)]()
 - Ahmed Atef - [![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=flat&logo=github&logoColor=white)]() [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=flat&logo=linkedin&logoColor=white)]()
 - Ahmed Atef - [![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=flat&logo=github&logoColor=white)]() [![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=flat&logo=linkedin&logoColor=white)]()
+
+  
 ### CAN Case
--In the first part of the project, we introduce the Unity Testing APP. This powerful tool not only provides a user-friendly interface for testing but also seamlessly reads and stores JSON files. The APP communicates with the CAN case via UART, paving the way for efficient and intuitive testing.
--Now, let's explore the brain of our system - the CAN case. It receives frames from the APP via UART, performs the necessary conversions, and communicates with the CAR ECU. This two-way communication allows for real-time testing and feedback.
+
+- In the first part of the project, we introduce the Unity Testing APP. This powerful tool not only provides a user-friendly interface for testing but also seamlessly reads and stores JSON files. The APP communicates with the CAN case via UART, paving the way for efficient and intuitive testing.
+- Now, let's explore the brain of our system - the CAN case. It receives frames from the APP via UART, performs the necessary conversions, and communicates with the CAR ECU. This two-way communication allows for real-time testing and feedback.
 The CAR ECU, the muscles of our system, is divided into three key components. The ARM hub serves as the central hub, orchestrating communication between the two AVR nodes. AVR node 1 controls LEDs, Motors, and Seatbelts, while AVR node 2 handles LM35 and LDR Sensors. The result? A comprehensive and responsive automotive control system.  
 
 
