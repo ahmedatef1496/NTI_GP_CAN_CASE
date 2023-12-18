@@ -41,7 +41,7 @@ The CAR ECU, the muscles of our system, is divided into three key components. Th
 - Project Showcase -> [Youtube]()
  
 ## System Layout
-![system_layout]()
+![system_layout](https://github.com/ahmedatef1496/NTI_GP_CAN_CASE/blob/main/pic/design.jpg)
 
 
 
