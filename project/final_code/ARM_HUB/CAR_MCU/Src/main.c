@@ -86,21 +86,21 @@ void UART_TX(void)
 {
 	counter = 0;
 
-	while(counter < 5)
+	while((counter < 5 && Data_RX[ID] < 4) || (counter < 4 && Data_RX[ID] >= 4))
 	{
-		STK_voidSetBusyWait(50);
+		STK_voidSetBusyWait(150);
 
 		if(counter == 0)
 		{
 			LCD_SetCursor(1, counter);
-			LCD_WriteNumber(Data_RX[ID]);
+//			LCD_WriteNumber(Data_RX[ID]);
 			USART_voidTransmitCharSynch(UART_NUM, Data_RX[ID]);
 			//			USART_voidTransmitCharSynch(USART_ONE, 'H');
 			counter++;
 		}
 		else if(counter == 1){
 			LCD_SetCursor(1, counter + 1);
-			LCD_WriteNumber(Data_RX[R_W]);
+//			LCD_WriteNumber(Data_RX[R_W]);
 			USART_voidTransmitCharSynch(UART_NUM, Data_RX[R_W]);
 			//			USART_voidTransmitCharSynch(USART_ONE, 'A');
 			counter++;
@@ -108,10 +108,15 @@ void UART_TX(void)
 		else
 		{
 			if(Data_RX[R_W] == 0){
-				USART_voidTransmitCharSynch(UART_NUM, Data_RX[DATA_BYTE]);
+				if(Data_RX[ID] == 3){
+					USART_voidTransmitCharSynch(UART_NUM, (Data_RX[DATA_BYTE] * 50));
+				}
+				else{
+					USART_voidTransmitCharSynch(UART_NUM, Data_RX[DATA_BYTE]);
+				}
 				Data_TX[R_W] = Data_RX[DATA_BYTE];
 				LCD_SetCursor(1, counter + 2);
-				LCD_WriteNumber(Data_TX[R_W]);
+//				LCD_WriteNumber(Data_TX[R_W]);
 				break;
 			}
 			else if(readSPI == 1){
@@ -120,9 +125,9 @@ void UART_TX(void)
 				MSPI_voidSendRecieveSynch(SPI_NUM, 0, &state);
 				Data_TX[R_W] = state;
 				LCD_SetCursor(1, counter + 2);
-				LCD_WriteNumber(counter);
+//				LCD_WriteNumber(counter);
 				counter++;
-				if(counter < 5)
+				if((counter < 5 && Data_RX[ID] < 4) || (counter < 4 && Data_RX[ID] >= 4))
 					USART_voidTransmitCharSynch(UART_NUM, state);
 			}
 		}
@@ -130,6 +135,11 @@ void UART_TX(void)
 
 	readSPI = 0;
 	Data_TX[ID] = Data_RX[ID];
+	if(Data_TX[ID] == 2){
+		TOGGLE_BIT(Data_TX[R_W], 0);
+	}
+	LCD_SetCursor(1, counter + 2);
+//	LCD_WriteNumber(Data_TX[R_W]);
 	CAN_TX();
 }
 

@@ -2,11 +2,12 @@
  * main.c
  *
  *  Created on: Dec 9, 2023
- *      Author: AHMED
+ *      Author: Hazim
  */
 
 #include "../Inc/APP/APP_Interface.h"
 #include "../Inc/MCAL/USART/USART_Interface.h"
+#include "../Inc/HAL/Motor/Motor_Config.h"
 
 #define STATE_ON	1
 #define STATE_OFF	0
@@ -34,42 +35,13 @@ volatile u8 BACK_LED_STATE =	0;
 
 volatile u8 SeatState = 0;
 
-volatile u8 MotorSpeed = 50;
+volatile u8 MotorSpeed = MOTOR_INIT_SPEED;
 
 volatile u8 state = 0;
 
 #define GET_SEAT_STATE			DIO_u8PORTA, DIO_u8PIN_0
-#define SEAT_LED				DIO_u8PORTA, DIO_u8PIN_1
-#define BUZZER_PIN				DIO_u8PORTA, DIO_u8PIN_2
-
-//
-//void SPI_RX()
-//{
-//
-//	if( Data_Count == 0 )
-//	{
-//		Global_ID = SPI_u8ReadDataISR();
-//		LCD_voidGoToPosition(0,0);
-//		LCD_voidWriteIntData(Global_ID);
-//		Data_Count++;
-//	}
-//	else if(Data_Count == 1)
-//	{
-//		R_W = SPI_u8ReadDataISR();
-//		LCD_voidGoToPosition(1,0);
-//		LCD_voidWriteIntData(R_W);
-//		Data_Count++;
-//		SPI_RX_Flag = 1;
-//	}
-//	else
-//	{
-//		state = SPI_u8ReadDataISR();
-//		LCD_voidGoToPosition(0,4);
-//		LCD_voidWriteIntData(state);
-//		Data_Count=0;
-//	}
-//}
-
+#define SEAT_LED				DIO_u8PORTC, DIO_u8PIN_1
+#define BUZZER_PIN				DIO_u8PORTC, DIO_u8PIN_2
 
 void USART_RXCallback(){
 	if( Data_Count == 0 )
@@ -111,7 +83,6 @@ void APP_voidInit(void)
 	GIE_voidEnable();
 
 	// SPI Init
-	//	SPI_voidSetCallBack(SPI_RX);
 	_delay_ms(20);
 	SPI_voidSlaveInit();
 	USART_voidRXCSetCallBack(USART_RXCallback);
@@ -119,7 +90,7 @@ void APP_voidInit(void)
 	USART_voidInit();
 	// LCD
 	LCD_voidInit();
-
+	
 	// Motor Init
 	Motor_voidInit();
 //	Motor_voidSetSpeed(MotorSpeed);
@@ -130,123 +101,6 @@ void APP_voidInit(void)
 	LED_voidBACK(BACK_LED_STATE);		// Back LED OFF
 }
 
-void APP_voidStart(void)
-{
-	/****************************************************************************/
-	// Seat Check
-	//		SeatState = DIO_u8GetPinValue(GET_SEAT_STATE);
-	//
-	//		if(SeatState)
-	//		{
-	//			DIO_u8SetPinValue(SEAT_LED, DIO_u8PIN_LOW);
-	//			DIO_u8SetPinValue(BUZZER_PIN, DIO_u8PIN_LOW);
-	//		}
-	//		else
-	//		{
-	//			if( MotorSpeed > 0 )
-	//			{
-	//				DIO_u8SetPinValue(SEAT_LED, DIO_u8PIN_HIGH);
-	//				//DIO_u8SetPinValue(BUZZER_PIN, DIO_u8PIN_HIGH);
-	//				//_delay_ms(300);
-	//				//DIO_u8SetPinValue(BUZZER_PIN, DIO_u8PIN_LOW);
-	//			}
-	//			else
-	//			{
-	//				DIO_u8SetPinValue(SEAT_LED, DIO_u8PIN_HIGH);
-	//			}
-	//		}
-
-
-
-	/****************************************************************************/
-	// SPI Communication
-	if( SPI_RX_Flag == 1 && ((R_W == READ && Data_Count > 1) || (R_W == WRITE && Data_Count == 0)))
-	{
-		SPI_RX_Flag = 0;
-		if(Data_Count == 4){
-			Data_Count = 0;
-		}
-		switch (Global_ID)
-		{
-
-		case FRONT_LED_ID:
-
-			if( R_W == READ )
-			{
-				SPI_voidSendDataISR(FRONT_LED_STATE);
-			}
-			else if( R_W == WRITE )
-			{
-				FRONT_LED_STATE = state;
-				LED_voidFRONT(FRONT_LED_STATE);
-			}
-			else
-			{
-
-			}
-			LCD_voidGoToPosition(1,1);
-			LCD_voidWriteIntData(FRONT_LED_STATE);
-			break;
-
-		case BACK_LED_ID:
-
-			if( R_W == READ )
-			{
-				SPI_voidSendDataISR(BACK_LED_STATE);
-			}
-			else if( R_W == WRITE )
-			{
-				BACK_LED_STATE = state;
-				LED_voidBACK(BACK_LED_STATE);
-			}
-			else
-			{
-
-			}
-			LCD_voidGoToPosition(1,2);
-			LCD_voidWriteIntData(BACK_LED_STATE);
-			break;
-
-		case SEAT_ID:
-
-			if( R_W == READ )
-			{
-				SPI_voidSendDataISR(SeatState);
-			}
-			else
-			{
-
-			}
-			LCD_voidGoToPosition(1,3);
-			LCD_voidWriteIntData(SeatState);
-			break;
-
-		case MOTOR_ID:
-
-			if( R_W == READ )
-			{
-				SPI_voidSendDataISR(MotorSpeed);
-			}
-			else if( R_W == WRITE )
-			{
-				MotorSpeed = state;
-				Motor_voidSetSpeed(MotorSpeed);
-
-			}
-			else
-			{
-
-			}
-			LCD_voidGoToPosition(1,4);
-			LCD_voidWriteIntData(MotorSpeed);
-			break;
-
-		default:
-			break;
-		}
-	}
-
-}
 
 int main(void)
 {
@@ -255,6 +109,28 @@ int main(void)
 
 	while(1)
 	{
+		SeatState = DIO_u8GetPinValue(GET_SEAT_STATE);
+
+		if(SeatState == 0)
+		{
+			DIO_u8SetPinValue(SEAT_LED, DIO_u8PIN_LOW);
+			DIO_u8SetPinValue(BUZZER_PIN, DIO_u8PIN_LOW);
+		}
+		else
+		{
+			if( MotorSpeed > 0 )
+			{
+				DIO_u8SetPinValue(SEAT_LED, DIO_u8PIN_HIGH);
+				DIO_u8SetPinValue(BUZZER_PIN, DIO_u8PIN_HIGH);
+				//_delay_ms(300);
+				//DIO_u8SetPinValue(BUZZER_PIN, DIO_u8PIN_LOW);
+			}
+			else
+			{
+				DIO_u8SetPinValue(SEAT_LED, DIO_u8PIN_HIGH);
+				DIO_u8SetPinValue(BUZZER_PIN, DIO_u8PIN_LOW);
+			}
+		}
 		/****************************************************************************/
 		// USART Communication
 		if( USART_RX_Flag == 1 && ((R_W == READ && Data_Count > 1) || (R_W == WRITE && Data_Count == 0)))
@@ -331,8 +207,8 @@ int main(void)
 				}
 				else if( R_W == WRITE )
 				{
-					MotorSpeed = state * 50;
-					Motor_voidSetSpeed(MotorSpeed);
+					MotorSpeed = 50;
+					Motor_voidSetSpeed(100);
 
 				}
 				else
@@ -347,7 +223,6 @@ int main(void)
 				break;
 			}
 		}
-		//		APP_voidStart();
 	}
 
 	return 0;

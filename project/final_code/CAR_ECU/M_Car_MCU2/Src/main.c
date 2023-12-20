@@ -8,6 +8,7 @@
 #include "../Inc/APP/APP_Interface.h"
 #include "../Inc/MCAL/USART/USART_Interface.h"
 #include "../Inc/MCAL/ADC/NTI_ADC_Interface.h"
+#include "util/delay.h"
 
 // IDs
 #define TEMP_ID				4
@@ -108,7 +109,7 @@ int main(void)
 		{
 			u8 temp = SPI_u8ReadDataISR();
 			USART_RX_Flag = 0;
-			if(Data_Count == 4){
+			if(Data_Count == 3){
 				Data_Count = 0;
 			}
 			switch (Global_ID)
@@ -116,16 +117,16 @@ int main(void)
 
 			case TEMP_ID:
 				SPI_voidSendDataISR((u32)(readings[0]/10));
-				USART_voidSendInterruptByte((u32)(readings[0]/10));
+				USART_voidSendInterruptByte('1');
 				LCD_voidGoToPosition(1,1);
 				LCD_voidWriteIntData((u32)(readings[0]/10));
 				break;
 
 			case LIGHT_ID:
-				SPI_voidSendDataISR((u32)(readings[1]/10));
-				USART_voidSendInterruptByte((u32)(readings[1]/10));
+				SPI_voidSendDataISR((u32)(readings[1]/1000));
+				USART_voidSendInterruptByte('2');
 				LCD_voidGoToPosition(1,5);
-				LCD_voidWriteIntData((u32)(readings[1]/10));
+				LCD_voidWriteIntData((u32)(readings[1]/1000));
 				break;
 
 			default:
