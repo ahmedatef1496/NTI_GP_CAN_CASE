@@ -31,11 +31,10 @@ The CAR ECU, the muscles of our system, is divided into three key components. Th
 <br>- It reads the CAN frame configurations (Identifier, DLC, and Data) from a user-written JSON file
 <br>- It receives the actual results and displays them on the GUI
 <br>- It compares the actual result with the expected one for each test and saves a status report as a JSON file.| [hex]()         |
-
-| 1    | [CAN Case]()     | STMF103C8T6  |- An ARM-based converter that reads the CAN configuration over a UART,<br>- It utilizes FreeRTOS to start sending and receiving CAN frames on the command, <br>- It also sends back the final output of the test to be evaluated from the laptop.| [hex]()         |
-| 2    | [ARM Node]()     | STMF103C8T6  | - A simulation of a car's Node,<br>- It receives the CAN frames sent by the CAN case <br>- decides which AVR node should receive that message next,<br>- It sends data to the AVR nodes using UART and receives the result using repeated SPI transfers to accommodate for any possible collisions.| [hex]()         |
-| 3    | [AVR Node 1]()   | ATMEGA32     |- controls the motor (using PWM), seatbelt (using a HW switch), and light systems of the car.| [hex]()         |
-| 4    | [AVR Node 2]()   | ATMEGA32     |- contains the sensor readings of both the LM35 and LDR,<br>- They receive data from the ARM HUB over UART and decide which system should be targeted| [hex]()         |
+| 2    | [CAN Case]()     | STMF103C8T6  |- An ARM-based converter that reads the CAN configuration over a UART,<br>- It utilizes FreeRTOS to start sending and receiving CAN frames on the command, <br>- It also sends back the final output of the test to be evaluated from the laptop.| [hex]()         |
+| 3    | [ARM Node]()     | STMF103C8T6  | - A simulation of a car's Node,<br>- It receives the CAN frames sent by the CAN case <br>- decides which AVR node should receive that message next,<br>- It sends data to the AVR nodes using UART and receives the result using repeated SPI transfers to accommodate for any possible collisions.| [hex]()         |
+| 4    | [AVR Node 1]()   | ATMEGA32     |- controls the motor (using PWM), seatbelt (using a HW switch), and light systems of the car.| [hex]()         |
+| 5    | [AVR Node 2]()   | ATMEGA32     |- contains the sensor readings of both the LM35 and LDR,<br>- They receive data from the ARM HUB over UART and decide which system should be targeted| [hex]()         |
 
 ---
 ## Documentation
