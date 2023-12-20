@@ -27,9 +27,9 @@ The CAR ECU, the muscles of our system, is divided into three key components. Th
 ### PARTS
 | PART | APP              | MC           | Description                                                                                                                         | HEX File        |  
 |------|------------------|--------------|-------------------------------------------------------------------------------------------------------------------------------------|-----------------|
-| 1    | [CAN Case]()     | STMF103C8T6  | - An ARM-based converter that reads the CAN configuration over a UART connection from the laptop
-                                           - It utilizes FreeRTOS to start sending and receiving CAN frames on the command
-                                           - It also sends back the final output of the test to be evaluated from the laptop| [hex]()         |
+| 1    | [CAN Case]()     | STMF103C8T6  |  An ARM-based converter that reads the CAN configuration over a UART connection from the laptop
+                                            It utilizes FreeRTOS to start sending and receiving CAN frames on the command
+                                            It also sends back the final output of the test to be evaluated from the laptop| [hex]()         |
 | 2    | [ARM Node]()     | STMF103C8T6  | DO..................................................................................................................................| [hex]()         |
 | 3    | [AVR Node 1]()   | ATMEGA32     | DO..................................................................................................................................| [hex]()         |
 | 4    | [AVR Node 2]()   | ATMEGA32     | DO..................................................................................................................................| [hex]()         |
